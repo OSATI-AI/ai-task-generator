@@ -1,0 +1,6 @@
+langchain>=0.0.142
+langchain_openai
+langchain_groq
+nicegui
+fauna
+ruamel.yaml

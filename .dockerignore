@@ -1,0 +1,4 @@
+# flyctl launch added from .gitignore
+**/Makefile
+**/__pycache__
+fly.toml
