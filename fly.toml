@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for foxy-v2 on 2024-05-17T14:29:43+02:00
+# fly.toml app configuration file generated for osati-tasks on 2024-05-27T22:08:34+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'foxy'
+app = 'osati-tasks'
 primary_region = 'ams'
 
 [build]

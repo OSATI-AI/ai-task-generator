@@ -1,4 +1,4 @@
-FROM zauberzeug/nicegui:1.4.23
+FROM zauberzeug/nicegui:1.4.26
 
 # Copy the requirements file first (to leverage Docker cache)
 COPY requirements.txt /tmp/

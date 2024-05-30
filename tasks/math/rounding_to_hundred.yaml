@@ -1,0 +1,45 @@
+title:
+  german: Natürliche Zahlen runden
+  english: Rounding natural numbers
+description: Rounding task to nearest hundred value, for values between 100 and 9999
+template: 01_simple_question_answer
+fill:
+  question:
+    german: 'Runde <math-field readonly id="unrounded-number"></math-field> auf Hunderter.'
+    english: 'Round <math-field readonly id="unrounded-number"></math-field> to the nearest hundred.'
+  answer:
+    all: <input id='answerField' class='input input-bordered w-full max-w-xs'>
+pyscript:
+  imports: |
+    import random
+    from pyscript import document
+    from pyweb import pydom
+  globals: |
+    answer = 0
+  checker: |
+    def check_answer(event):
+      user_answer = pydom['#answerField'][0].value
+    
+      if user_answer.isnumeric():
+          user_answer = int(user_answer)
+          is_correct = True if user_answer == answer else False
+      else:
+          is_correct = False
+
+      return [is_correct, answer, user_answer]
+  generator: |
+    def generate_number():
+      while True:
+          number = random.randint(100, 9999)
+          if number % 100 != 0:
+              return number
+      
+    def generate(event):
+      global answer
+
+      number = generate_number()
+      rounded_number = round(number, -2)
+      answer = rounded_number
+
+      pydom['#unrounded-number'][0].html = f"{number}"
+      pydom['#answerField'][0].value = ""

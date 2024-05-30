@@ -3,4 +3,6 @@ langchain_openai
 langchain_groq
 nicegui
 fauna
-ruamel.yaml
+selenium
+pyyaml
+bs4
