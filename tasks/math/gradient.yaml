@@ -3,15 +3,13 @@ title:
   english: Read gradient
 description: Read the gradient of the function from the graph
 template: 02_figure_question_answer
-fill:
-  figure:
-    all: <div id="figure_content"></div>
-  question:
+text:
+  text_question:
     german: 'Was ist die Steigung der Funktion?'
     english: 'What is the gradient of the function?'
-  answer:
-    english: "<span><b>Gradient:</b><input id='answerField' class='input input-bordered w-full max-w-xs'></span>"
-    german: "<span><b>Steigung:</b><input id='answerField' class='input input-bordered w-full max-w-xs'></span>" 
+  text_answer:
+    german: 'Steigung'
+    english: 'Gradient'
 pyscript:
   imports: |
     import random
@@ -30,15 +28,27 @@ pyscript:
           is_correct = False
       return [is_correct, answer, user_answer]
   generator: |
-    def generate(event):
+    def generate(parent):
       global answer
       answer = 0
+
       while True:
         slope = random.randint(-5, 5)
         if slope != answer and slope != 0:
           answer = slope
           break 
-      container = document.getElementById("figure_content")
-      container.innerHTML=""
-      pydom['#answerField'][0].value = ""
+
+      question_element, figure_element, answer_element = generate_template(parent)
+      question_element.innerText = "{text_question}"
+
+      answer_input = document.createElement("input")
+      answer_input.className = 'input input-bordered w-full max-w-xs'
+      answer_input.id = "answerField"
+      answer_span = document.createElement("span")
+      answer_label = document.createElement("p")
+      answer_label.innerHTML = "<b>{text_answer}: </b>"
+      answer_span.append(answer_label)
+      answer_span.append(answer_input)
+      answer_element.append(answer_span)
+
       js.plot_linear_function(answer, 0, "figure_content")

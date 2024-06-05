@@ -109,7 +109,7 @@ async def main():
 
     # get all tasks from all subfolders of tasks/ (but not base_templates)
     tasks = []
-    for root, dirs, files in os.walk('new'):
+    for root, dirs, files in os.walk('tasks'):
         if root != os.path.join('tasks', 'base_templates'):
             for file in files:
                 if file.endswith('.yaml'):

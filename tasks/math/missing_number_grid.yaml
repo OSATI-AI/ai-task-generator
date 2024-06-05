@@ -3,15 +3,13 @@ title:
   english: Missing Number
 description: Find the missing number in the grid
 template: 02_figure_question_answer
-fill:
-  figure:
-    all: <div id="figure_content"></div>
-  question:
+text:
+  text_question:
     german: 'Weche Zahl fehlt?'
     english: 'Which number is missing?'
-  answer:
-    english: "<span><b>Missing Number:</b><input id='answerField' class='input input-bordered w-full max-w-xs'></span>"
-    german: "<span><b>Fehlende Zahl:</b><input id='answerField' class='input input-bordered w-full max-w-xs'></span>" 
+  text_answer:
+    english: 'Missing Number'
+    german: 'Fehlende Zahl' 
 pyscript:
   imports: |
     import random
@@ -30,15 +28,27 @@ pyscript:
           is_correct = False
       return [is_correct, answer, user_answer]
   generator: |
-    def generate(event):
+    def generate(parent):
       global answer
       answer = 0
+
       while True:
         number = random.randint(1, 100)
         if number != answer:
           answer = number
           break 
-      container = document.getElementById("figure_content")
-      container.innerHTML=""
-      pydom['#answerField'][0].value = ""
+
+      question_element, figure_element, answer_element = generate_template(parent)
+      question_element.innerText = "{text_question}"
+
+      answer_input = document.createElement("input")
+      answer_input.className = 'input input-bordered w-full max-w-xs'
+      answer_input.id = "answerField"
+      answer_span = document.createElement("span")
+      answer_label = document.createElement("p")
+      answer_label.innerHTML = "<b>{text_answer}: </b>"
+      answer_span.append(answer_label)
+      answer_span.append(answer_input)
+      answer_element.append(answer_span)
+
       js.plot_missing_number_grid(answer,"figure_content")

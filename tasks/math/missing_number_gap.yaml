@@ -3,12 +3,10 @@ title:
   english: Missing Number
 description: Fill in the missing number in a sequence 
 template: 01_simple_question_answer
-fill:
-  question:
+text:
+  text_question:
     german: 'Fülle die Lücke mit der richtigen Zahl.'
     english: 'Fill in the gap with the correct number.'
-  answer:
-    all: <math-field readonly id="sequence" class='w-128'></math-field>
 pyscript:
   imports: |
     import random
@@ -20,7 +18,7 @@ pyscript:
   checker: |
     def check_answer(event):
       # Access the math-field element
-      math_field = document.getElementById("sequence")
+      math_field = document.getElementById("answer_field")
       user_answer = math_field.getPromptValue('answer')
       print("Answer: ", answer)
       print("User answer: ", user_answer)
@@ -32,7 +30,7 @@ pyscript:
 
       return [is_correct, answer, user_answer]
   generator: |
-    def generate(event):
+    def generate(parent):
       global answer
 
       start = random.randint(1, 90)
@@ -50,7 +48,13 @@ pyscript:
         if i <9:
           seq_string += ","
 
-
-      mf = document.getElementById("sequence")
-      mf.setValue(seq_string)
-      mf.mathVirtualKeyboardPolicy = "manual"
+      question_element, answer_element = generate_template(parent)
+      question_element.innerText="{text_question}"
+      answer_field = document.createElement("math-field")
+      answer_field.id = "answer_field"
+      answer_field.className = 'w-128'
+      answer_field.setValue(seq_string)
+      answer_field.mathVirtualKeyboardPolicy = "manual"
+      answer_field.readonly = True
+      answer_element.append(answer_field)
+      

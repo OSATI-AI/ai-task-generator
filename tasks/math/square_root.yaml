@@ -3,12 +3,10 @@ title:
   english: Square Root
 description: Calculate the square root
 template: 01_simple_question_answer
-fill:
-  question:
+text:
+  text_question:
     german: 'Bestimmte die Quadratwurzel.'
     english: 'Find the square root.'
-  answer:
-    all: <math-field readonly id="equation" class='w-48'></math-field>
 pyscript:
   imports: |
     import random
@@ -30,7 +28,7 @@ pyscript:
 
       return [is_correct, answer, user_answer]
   generator: |
-    def generate(event):
+    def generate(parent):
       global answer
       
       while True:
@@ -41,6 +39,12 @@ pyscript:
 
       equation = f"\sqrt{answer**2} = \\placeholder[answer]{{}}"
 
-      mf = document.getElementById("equation")
-      mf.setValue(equation)
-      mf.mathVirtualKeyboardPolicy = "manual"
+      question_element, answer_element = generate_template(parent)
+      question_element.innerText="{text_question}"
+      answer_field = document.createElement("math-field")
+      answer_field.id = "equation"
+      answer_field.className = 'w-48'
+      answer_field.setValue(equation)
+      answer_field.mathVirtualKeyboardPolicy = "manual"
+      answer_field.readonly = True
+      answer_element.append(answer_field)

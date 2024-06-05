@@ -133,7 +133,6 @@ def construct_task(filename):
 
     # TODO: Replace this with a proper templating for multi-language strings..
     for key in task_text.keys():
-        print(task_text[key])
         script = script.replace("{"+key+"}",task_text[key]["english"])
 
     code = f"""

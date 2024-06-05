@@ -1,15 +1,16 @@
-description: Simple question field on the top and an answer field at the bottom
-code: |
-  <p id='question'></p>
-  <p id='answer'></p>
-to_fill:
-  question:
-    id: question
-    description: The question you pose
-    example 1: "Runde <math-field readonly>2862</math-field> auf Hunderter."
-    example 2: "Ohne die Hilfe eines Taschenrechners, wandle die Dezimalzahl in einen vereinfachten Bruch um."
-  answer:
-    id: answer
-    description: The answer line which might contain part of the task as well as an input field or buttons to place an answer
-    example 1: "<input type='number' id='answerField' class='input input-bordered w-full max-w-xs'>"
-    example 2: "<math-field readonly>0,75 = \\placeholder[answer]{}</math-field>"
+description: Simple question field on the top and and answer field at the bottom
+pyscript:
+  imports: |
+    from pyscript import document
+    from pyweb import pydom
+  generator: |
+      def generate_template(parent):
+        parent = document.getElementById(parent)
+        parent.innerHTML=""
+
+        question_element = document.createElement("div")
+        answer_element = document.createElement("div")
+        parent.append(question_element)
+        parent.append(answer_element)
+
+        return question_element, answer_element
