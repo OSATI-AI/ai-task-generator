@@ -1,0 +1,44 @@
+title:
+  german: Fehlende Zahl
+  english: Missing Number
+description: Find the missing number in the grid
+template: 02_figure_question_answer
+fill:
+  figure:
+    all: <div id="figure_content"></div>
+  question:
+    german: 'Weche Zahl fehlt?'
+    english: 'Which number is missing?'
+  answer:
+    english: "<span><b>Missing Number:</b><input id='answerField' class='input input-bordered w-full max-w-xs'></span>"
+    german: "<span><b>Fehlende Zahl:</b><input id='answerField' class='input input-bordered w-full max-w-xs'></span>" 
+pyscript:
+  imports: |
+    import random
+    from pyscript import document
+    from pyweb import pydom
+    import js
+  globals: |
+    answer = 0
+  checker: |
+    def check_answer(event):
+      user_answer = pydom['#answerField'][0].value
+      try:
+        user_answer = int(user_answer)
+        is_correct = user_answer == answer
+      except ValueError:
+          is_correct = False
+      return [is_correct, answer, user_answer]
+  generator: |
+    def generate(event):
+      global answer
+      answer = 0
+      while True:
+        number = random.randint(1, 100)
+        if number != answer:
+          answer = number
+          break 
+      container = document.getElementById("figure_content")
+      container.innerHTML=""
+      pydom['#answerField'][0].value = ""
+      js.plot_missing_number_grid(answer,"figure_content")

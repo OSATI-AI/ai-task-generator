@@ -84,8 +84,6 @@ def test_task(code):
 def construct_task(filename):
     # read task file
     task = open(filename, "r").read()
-
-    # read as YAML
     task = yaml.safe_load(task)
 
     # load template
@@ -93,69 +91,54 @@ def construct_task(filename):
     template = open(template, "r").read()
     template = yaml.safe_load(template)
 
-    # template code
-    template_code = template['code']
-
-    # Parse the HTML content using BeautifulSoup
-    soup = BeautifulSoup(template_code, 'html.parser')
-
-    for key in template['to_fill'].keys():
-        id = template['to_fill'][key]['id']
-
-        try:
-            new_content = task['fill'][key]['all']
-        except KeyError:
-            new_content = task['fill'][key]['english']
-
-        # find the p-element with id
-        element_p = soup.find('p', id=id)
-
-        # Inject the new HTML content into the p-element
-        element_p.append(BeautifulSoup(new_content, 'html.parser'))
-
-    # Get the modified HTML string
-    template_code = str(soup)
-
-    # put together code
     body = f"""
-<div class='card bg-white'>
-    <div class='card-body'>
-        {template_code}
-    </div>
-</div>
+        <div class='card bg-white'>
+            <div class='card-body' id='task_container'>
+            </div>
+        </div>
     """
-
-    script_header = task['pyscript']['imports']
-    script_globals = task['pyscript']['globals']
-    script_generator = task['pyscript']['generator']
-    script_checker = task['pyscript']['checker']
-
+    
+    template_header = template['pyscript']['imports']
+    template_generator = template['pyscript']['generator']
+    task_text = task['text']
+    task_header = task['pyscript']['imports']
+    task_globals = task['pyscript']['globals']
+    task_generator = task['pyscript']['generator']
+    task_checker = task['pyscript']['checker']
+    
     script = f"""
-<py-script>
-{script_header}
-{script_globals}
+    <py-script>
+        {task_header}
+        {template_header}
+        {template_generator}
+        {task_globals}
+        {task_generator}
+        {task_checker}
 
-{script_generator}
+        def check(event):
+            result = check_answer(event)
+            flag = result[0]
+            if flag:
+                pydom['#result'][0].html = "Correct!" 
+                generate('task_container')
+            else:
+                pydom['#result'][0].html = "Almost! Try again!"
 
-{script_checker}
+        def refresh(event):
+            generate('task_container')
 
-def check(event):
-    result = check_answer(event)
-    flag = result[0]
-    if flag:
-        pydom['#result'][0].html = "Correct!" 
-        generate(None)
-    else:
-        pydom['#result'][0].html = "Almost! Try again!"
-
-generate(None)
-</py-script>
+        generate('task_container')
+    </py-script>
     """
+
+    # TODO: Replace this with a proper templating for multi-language strings..
+    for key in task_text.keys():
+        print(task_text[key])
+        script = script.replace("{"+key+"}",task_text[key]["english"])
 
     code = f"""
-{body}
-
-{script}
+        {body}
+        {script}
     """
 
     return code, task['title']['english']

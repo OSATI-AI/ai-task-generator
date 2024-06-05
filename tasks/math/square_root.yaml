@@ -1,0 +1,46 @@
+title:
+  german: Quadratwurzel
+  english: Square Root
+description: Calculate the square root
+template: 01_simple_question_answer
+fill:
+  question:
+    german: 'Bestimmte die Quadratwurzel.'
+    english: 'Find the square root.'
+  answer:
+    all: <math-field readonly id="equation" class='w-48'></math-field>
+pyscript:
+  imports: |
+    import random
+    from pyscript import document
+    from pyweb import pydom
+  globals: |
+    answer = 0
+  checker: |
+    def check_answer(event):
+      # Access the math-field element
+      math_field = document.getElementById("equation")
+      user_answer = math_field.getPromptValue('answer')
+    
+      if user_answer.isnumeric():
+          user_answer = int(user_answer)
+          is_correct = True if user_answer == answer else False
+      else:
+          is_correct = False
+
+      return [is_correct, answer, user_answer]
+  generator: |
+    def generate(event):
+      global answer
+      
+      while True:
+        number = random.randint(2, 10)#
+        if number != answer:
+          answer = number
+          break 
+
+      equation = f"\sqrt{answer**2} = \\placeholder[answer]{{}}"
+
+      mf = document.getElementById("equation")
+      mf.setValue(equation)
+      mf.mathVirtualKeyboardPolicy = "manual"

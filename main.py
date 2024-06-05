@@ -3,7 +3,6 @@ from nicegui import ui, context, app
 from utils import test_task
 import random
 from utils import construct_task
-
 import os
 
 class Task:
@@ -26,16 +25,18 @@ class Task:
         self.update(code, title)
 
 @ui.page('/')
-def main():
+async def main():
     # add pyscript dependency
-    app.add_static_file(url_path='/tasks.css', local_file='tasks.css')
+    #app.add_static_file(url_path='/tasks.css', local_file='tasks.css')
     # <link rel="stylesheet" type="text/tailwindcss" href="tasks.css">
+    app.add_static_files("/scripts", "scripts")
     ui.add_head_html("""
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js" nonce="5834b41ccaf1439bb86c2c5b974a72a1"></script>
     <script defer src="//unpkg.com/mathlive"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css"/>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.5/dist/full.min.css" rel="stylesheet" type="text/css"/>
-
+    <script type='text/javascript' src='scripts/figure.js'></script>
     <style type="text/tailwindcss">
         /* Custom styles for the question element */
         #question {
@@ -53,6 +54,39 @@ def main():
         #answer {
         @apply text-base text-gray-700;
         }
+                     
+
+                     
+
+
+
+        .choice-container {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .choice {
+            background-color: white;
+            border: 1px solid grey;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            margin: 10px 0;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .choice:hover {
+            background-color: #d4edda;
+        }
+                     
+        .choice_selected{
+            background-color: #d4edda;      
+        }
+                     
+
+
+
     </style>
     """)
 
@@ -75,8 +109,8 @@ def main():
 
     # get all tasks from all subfolders of tasks/ (but not base_templates)
     tasks = []
-    for root, dirs, files in os.walk('tasks'):
-        if root != 'tasks/base_templates':
+    for root, dirs, files in os.walk('new'):
+        if root != os.path.join('tasks', 'base_templates'):
             for file in files:
                 if file.endswith('.yaml'):
                     tasks.append(os.path.join(root, file))
@@ -93,6 +127,7 @@ def main():
     with ui.row().classes('w-full h-full'):
         with ui.column().classes('w-[49%] h-full justify-center'):
             for filename in tasks:
+                filename = filename.replace('\\','/')
                 taskname = filename.split('/')[-1]
                 taskname = taskname.split('.')[0]
                 taskname = ' '.join(taskname.split('_'))
@@ -102,11 +137,11 @@ def main():
             with ui.row().classes('w-full h-[10vh]'):
                 title_label = ui.label('Math Practice: Multiply & Divide').classes('text-xl font-bold')
             
-            container = ui.row().classes('w-full h-[70vh] items-center justify-center')
+            container = ui.row().classes('w-full ')
 
             with ui.row().classes('w-full h-[10vh]'):
                 ui.button('Check Answer', icon='check_circle').props('unelevated rounded color=brown-5 text-color=white size=md py-click="check"')
-                ui.button('Refresh', icon='refresh').props('unelevated rounded color=brown-5 text-color=white size=md').props('py-click="generate"')
+                ui.button('Refresh', icon='refresh').props('unelevated rounded color=brown-5 text-color=white size=md').props('py-click="refresh"')
                 ui.label('').classes('text-lg font-bold').props('id="result"')
 
     task = Task(container, title_label)

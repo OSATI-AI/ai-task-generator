@@ -1,0 +1,44 @@
+title:
+  german: Steigung ablesen
+  english: Read gradient
+description: Read the gradient of the function from the graph
+template: 02_figure_question_answer
+fill:
+  figure:
+    all: <div id="figure_content"></div>
+  question:
+    german: 'Was ist die Steigung der Funktion?'
+    english: 'What is the gradient of the function?'
+  answer:
+    english: "<span><b>Gradient:</b><input id='answerField' class='input input-bordered w-full max-w-xs'></span>"
+    german: "<span><b>Steigung:</b><input id='answerField' class='input input-bordered w-full max-w-xs'></span>" 
+pyscript:
+  imports: |
+    import random
+    from pyscript import document
+    from pyweb import pydom
+    import js
+  globals: |
+    answer = 0
+  checker: |
+    def check_answer(event):
+      user_answer = pydom['#answerField'][0].value
+      try:
+        user_answer = int(user_answer)
+        is_correct = user_answer == answer
+      except ValueError:
+          is_correct = False
+      return [is_correct, answer, user_answer]
+  generator: |
+    def generate(event):
+      global answer
+      answer = 0
+      while True:
+        slope = random.randint(-5, 5)
+        if slope != answer and slope != 0:
+          answer = slope
+          break 
+      container = document.getElementById("figure_content")
+      container.innerHTML=""
+      pydom['#answerField'][0].value = ""
+      js.plot_linear_function(answer, 0, "figure_content")

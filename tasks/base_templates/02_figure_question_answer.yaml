@@ -1,0 +1,20 @@
+description: Simple question field on the top a figure in the center and an answer field at the bottom
+code: |
+  <p id='question'></p>
+  <p id='figure'></p>
+  <p id='answer'></p>
+to_fill:
+  figure:
+    id: figure
+    description: A figure that the question is based on or that gives a hint. This field is a container that is filled by p5js
+    example 1: "<div id = 'figure_content'>"
+  question:
+    id: question
+    description: The question you pose
+    example 1: "Runde <math-field readonly>2862</math-field> auf Hunderter."
+    example 2: "Ohne die Hilfe eines Taschenrechners, wandle die Dezimalzahl in einen vereinfachten Bruch um."
+  answer:
+    id: answer
+    description: The answer line which might contain part of the task as well as an input field or buttons to place an answer
+    example 1: "<input type='number' id='answerField' class='input input-bordered w-full max-w-xs'>"
+    example 2: "<math-field readonly>0,75 = \\placeholder[answer]{}</math-field>"
