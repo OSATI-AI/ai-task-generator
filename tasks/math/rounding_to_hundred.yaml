@@ -47,7 +47,7 @@ pyscript:
       mf.readonly = True
       mf.innerHTML = f"{number}"
       question_label = document.createElement("p")
-      question_label.innerHTML = "{text_question}"
+      question_label.innerHTML = "{{ text.text_question }}"
       question_span.append(question_label)
       question_span.append(mf)
       question_element.append(question_span)

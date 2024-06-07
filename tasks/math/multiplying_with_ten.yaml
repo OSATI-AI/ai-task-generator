@@ -36,10 +36,10 @@ pyscript:
       n2 = random.randint(1, 9) * 10
 
       answer = n1 * n2
-      equation = f"{n1} \\cdot {n2} = \\placeholder[answer]{{}}"
+      equation = str(n1) + "\\cdot" +str(n2) +" = \\placeholder[answer]{}"
 
       question_element, answer_element = generate_template(parent)
-      question_element.innerText="{text_question}"
+      question_element.innerText="{{ text.text_question }}"
       answer_field = document.createElement("math-field")
       answer_field.id = "equation"
       answer_field.className = 'w-48'

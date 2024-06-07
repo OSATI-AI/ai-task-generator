@@ -40,23 +40,23 @@ pyscript:
     shapes = {
       "triangle":{
         "function":js.drawTriangle,
-        "name":"{text_triangle}"
+        "name":"{{ text.text_triangle }}"
       },
       "rectangle":{
         "function":js.drawRectangle,
-        "name":"{text_rectangle}"
+        "name":"{{ text.text_rectangle }}"
       },
       "quadrangle":{
         "function":js.drawQuadrangle,
-        "name":"{text_quadrangle}"
+        "name":"{{ text.text_quadrangle }}"
       },
       "pentagon":{
         "function":js.drawPentagon,
-        "name":"{text_pentagon}"
+        "name":"{{ text.text_pentagon }}"
       },
       "ellipse":{
         "function":js.drawEllipse,
-        "name":"{text_ellipse}"
+        "name":"{{ text.text_ellipse }}"
       }
     }
 
@@ -97,7 +97,7 @@ pyscript:
       answer = shape_choices.index(correct_shape)
 
       question_element, choices_container, choices_elements = generate_template(parent, NUM_CHOICES)
-      question_element.innerText = "{text_question} "+shapes[correct_shape]["name"]+"?"
+      question_element.innerText = "{{ text.text_question }} "+shapes[correct_shape]["name"]+"?"
       
       for i,c_element in enumerate(choices_elements):
         c_element.id = "choice_"+str(i)

@@ -3,9 +3,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import tempfile
 import time
-from bs4 import BeautifulSoup
 import yaml
 import os
+from jinja2 import Template
+
+LANGAUGE = "english"
 
 def test_task(code):
     # Path to your ChromeDriver
@@ -81,10 +83,29 @@ def test_task(code):
         service.stop()
         return logs
     
+def fill_text(yaml_file, language):
+    # Convert YAML data to a string
+    template_str = yaml.dump(yaml_file)
+
+    # Create a Jinja2 template
+    template = Template(template_str)
+
+    # Prepare the context with the selected language
+    text_data = yaml_file["text"]
+    context = {key: value[language] for key, value in text_data.items()}
+
+    # Render the template with the context
+    rendered_str = template.render(text=context)
+
+    # Convert the rendered string back to a dictionary
+    return yaml.safe_load(rendered_str)
+
 def construct_task(filename):
     # read task file
     task = open(filename, "r").read()
     task = yaml.safe_load(task)
+    # fill in language dependent text segments
+    task = fill_text(task, language=LANGAUGE)
 
     # load template
     template = os.path.join('tasks/base_templates', task['template'] + '.yaml')
@@ -100,7 +121,6 @@ def construct_task(filename):
     
     template_header = template['pyscript']['imports']
     template_generator = template['pyscript']['generator']
-    task_text = task['text']
     task_header = task['pyscript']['imports']
     task_globals = task['pyscript']['globals']
     task_generator = task['pyscript']['generator']
@@ -131,13 +151,9 @@ def construct_task(filename):
     </py-script>
     """
 
-    # TODO: Replace this with a proper templating for multi-language strings..
-    for key in task_text.keys():
-        script = script.replace("{"+key+"}",task_text[key]["english"])
-
     code = f"""
         {body}
         {script}
     """
 
-    return code, task['title']['english']
+    return code, task['title'][LANGAUGE]

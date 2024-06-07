@@ -53,7 +53,7 @@ pyscript:
       choices.sort()
       answer = choices.index(correct)
       question_element, choices_container, choices_elements = generate_template(parent, NUM_CHOICES)
-      question_element.innerText = "{text_question}  " + f"{num1} + {num2} = "
+      question_element.innerText = "{{ text.text_question }}  " + f"{num1} + {num2} = "
       for i,c_element in enumerate(choices_elements):
         c_element.innerText = choices[i]
         c_element.onclick = onclick_gen(i,choices_elements)

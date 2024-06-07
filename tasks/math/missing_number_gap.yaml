@@ -49,7 +49,7 @@ pyscript:
           seq_string += ","
 
       question_element, answer_element = generate_template(parent)
-      question_element.innerText="{text_question}"
+      question_element.innerText="{{ text.text_question }}"
       answer_field = document.createElement("math-field")
       answer_field.id = "answer_field"
       answer_field.className = 'w-128'
